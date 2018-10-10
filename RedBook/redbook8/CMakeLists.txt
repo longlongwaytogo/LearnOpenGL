@@ -39,7 +39,9 @@ SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 add_library(comm src/comm/gl3w.c src/comm/LoadShaders.cpp src/comm/targa.cpp src/comm/vbm.cpp)
 # ╣зр╩уб
 add_executable(triangles src/1/triangles.cpp)
- 
+SET_PROPERTY(TARGET triangles PROPERTY FOLDER "ch01")
 
-SET_PROPERTY(TARGET triangles PROPERTY FOLDER "capture-01")
+# ch03 
+add_executable(primitiverestart src/3/ch03_primitive_restart.cpp)
+SET_PROPERTY(TARGET primitiverestart PROPERTY FOLDER "ch03")
 
