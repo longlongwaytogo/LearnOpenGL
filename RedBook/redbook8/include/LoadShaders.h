@@ -8,6 +8,7 @@
 #define __LOAD_SHADERS_H__
 
 #include <GL/gl.h>
+#include <string>
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,6 +27,21 @@ extern "C" {
 //  LoadShaders() returns the shader program value (as returned by
 //    glCreateProgram()) on success, or zero on failure. 
 //
+class Utils
+{
+private:
+	Utils();
+public:
+	static Utils* instance();
+	std::string getMediaPath(){ return m_strMediaPath;}
+	std::string getAppPath() { return m_strAppPath;}
+
+private:
+	std::string m_strAppPath;
+	std::string m_strMediaPath;
+};
+
+
 
 typedef struct {
 

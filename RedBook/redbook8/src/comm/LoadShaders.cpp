@@ -18,6 +18,37 @@
 extern "C" {
 #endif // __cplusplus
 
+
+Utils::Utils()
+{
+	std::string path;
+	char buf[255];
+	GetModuleFileName(NULL,buf,255);
+	path = buf;
+	path = path.substr(0,path.find_last_of("\\/")+1);
+	m_strAppPath = path;
+
+	std::string mediaPath = path + "Media";
+	if(_access(mediaPath.c_str(),0)!=0) // not find Media
+	{
+		std::string newPath = path.substr(0,path.find_last_of("\\/"));
+		newPath =  newPath.substr(0,newPath.find_last_of("\\/")+1);
+		mediaPath = newPath  + "Media";
+		if(_access(mediaPath.c_str(),0) == 0)
+		{
+			path = newPath;
+		}
+	}
+		
+	m_strMediaPath = path;//+ "Media/";
+}
+
+Utils* Utils::instance()
+{
+	static Utils s_instance;
+	return &s_instance;
+}
+
 //----------------------------------------------------------------------------
 
 static const GLchar*
@@ -57,33 +88,16 @@ ReadShader( const char* filename )
 GLuint
 LoadShaders( ShaderInfo* shaders )
 {
-	std::string path;
-	char buf[255];
-	GetModuleFileName(NULL,buf,255);
-	path = buf;
-	path = path.substr(0,path.find_last_of("\\/")+1);
-	
-	std::string mediaPath = path + "Media";
-	if(_access(mediaPath.c_str(),0)!=0) // not find Media
-	{
-		std::string newPath = path.substr(0,path.find_last_of("\\/"));
-		newPath =  newPath.substr(0,newPath.find_last_of("\\/")+1);
-		mediaPath = newPath  + "Media";
-		if(_access(mediaPath.c_str(),0) == 0)
-		{
-			path = newPath;
-		}
-	}
-
     if ( shaders == NULL ) { return 0; }
 
     GLuint program = glCreateProgram();
-
+	std::string path = Utils::instance()->getMediaPath();
     ShaderInfo* entry = shaders;
     while ( entry->type != GL_NONE ) {
         GLuint shader = glCreateShader( entry->type );
 
         entry->shader = shader;
+
 		std::string fileName = path  + entry->filename;
 		const GLchar* source = ReadShader( fileName.c_str() );
         if ( source == NULL ) {

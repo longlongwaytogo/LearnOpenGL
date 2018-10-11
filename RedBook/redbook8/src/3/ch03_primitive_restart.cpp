@@ -40,8 +40,15 @@ void PrimitiveRestartExample::Initialize(const char* title)
 	
 	static ShaderInfo shader_info[] = 
 	{
+#define USE_STRUCT 1
+#if USE_STRUCT 
+			{GL_VERTEX_SHADER,"Media/Shaders/3/ch03primitiveRestart_s.vs.glsl"},
+		{GL_FRAGMENT_SHADER,"Media/Shaders/3/ch03primitive_restart_s.fs.glsl"},
+#else
+
 		{GL_VERTEX_SHADER,"Media/Shaders/3/ch03primitiveRestart.vs.glsl"},
 		{GL_FRAGMENT_SHADER,"Media/Shaders/3/ch03primitive_restart.fs.glsl"},
+#endif
 		{GL_NONE,NULL}
 	};
 	
