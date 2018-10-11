@@ -34,7 +34,7 @@ private:
 	
 END_APP_DECLARATION()
 
-DEFINE_APP(Instance_1 ,"ch03-2-Instance_1")
+DEFINE_APP(Instance_1 ,"ch03-3-Instance_1")
 
 void Instance_1::Initialize(const char* title)
 {
@@ -80,7 +80,7 @@ void Instance_1::Initialize(const char* title)
 	glGenBuffers(1,&m_color_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER,m_color_buffer);
 	// 从GPU申请内存并初始化
-	glBufferData(GL_ARRAY_BUFFER,sizeof(colors),colors,GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER,sizeof(colors),colors,GL_STATIC_DRAW); // 颜色不改变，可以设置为静态类型
 	// 告诉顶点着色器，顶点数据访问索引
 	// slot, size,type,normalize,strip,base
 	glVertexAttribPointer(color_loc,4,GL_FLOAT,GL_FALSE,0,NULL);
@@ -90,7 +90,7 @@ void Instance_1::Initialize(const char* title)
     // 1 to get OpenGL to give us a new value of 'color' per-instance
     // rather than per-vertex.
 	glVertexAttribDivisor(color_loc,1);
-//	glBindBuffer(GL_ARRAY_BUFFER,0);
+	glBindBuffer(GL_ARRAY_BUFFER,0);
 	
 	// model_matrix 
 	glGenBuffers(1,&m_model_matrix_buffer);
@@ -111,9 +111,9 @@ void Instance_1::Initialize(const char* title)
 		glVertexAttribDivisor(model_matrix_loc + i,1);
 	}
 	
-//	glBindBuffer(GL_ARRAY_BUFFER,0);
+	glBindBuffer(GL_ARRAY_BUFFER,0);
 	  // Done (unbind the object's VAO)
-    glBindVertexArray(0);
+   // glBindVertexArray(0);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 

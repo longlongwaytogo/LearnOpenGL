@@ -114,20 +114,20 @@ void APIENTRY 			Application::DebugOutputCallback(GLenum source,         \
 #endif
 
 #define DEFINE_APP(appclass,title)                          \
-		  Application * Application::s_app;       \
+		  Application * Application::s_app;				   \
                                                             \
 void Application::DisplayFunc(void)          			     \
 {                                                           \
     s_app->Display();                                       \
 }                                                           \
                                                             \
-void Application::ReshapeFunc(int width,          \
+void Application::ReshapeFunc(int width,				   \
                                         int height)         \
 {                                                           \
     s_app->Reshape(width, height);                          \
 }                                                           \
                                                             \
-void  Application::MainLoop(void)                  \
+void  Application::MainLoop(void)							 \
 {                                                           \
     for (;;)                                                \
         glutMainLoopEvent();                                \
@@ -135,7 +135,7 @@ void  Application::MainLoop(void)                  \
                                                             \
 int main(int argc, char ** argv)                            \
 {                                                           \
-    Application * app = appclass::Create();       \
+    Application * app = appclass::Create();					 \
                                                             \
     app->Initialize(title);                                 \
     app->MainLoop();                                        \

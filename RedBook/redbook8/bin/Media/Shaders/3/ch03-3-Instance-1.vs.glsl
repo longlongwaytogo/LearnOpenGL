@@ -27,10 +27,16 @@ out VERTEX
 
 void main()
 {
+    // Construct a model-view matrix from the uniform view matrix
+    // and the per-instance model matrix.
 	mat4 model_view_matrix = view_matrix * model_matrix;
+    // Transform position by the model-view matrix, then by the
+    // projection matrix.
 	gl_Position = projection_matrix * model_view_matrix * position;
-
+    // Transform the normal by the upper-left-3x3-submatrix of the
+    // model-view matrix
 	vertex.normal =  mat3(model_view_matrix) * normal;
+	//vertex.normal = normal;
 	vertex.color = color;
 }
 

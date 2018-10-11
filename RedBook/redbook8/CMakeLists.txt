@@ -51,6 +51,10 @@ SET_PROPERTY(TARGET ch03-2-IndexDraw PROPERTY FOLDER "ch03")
 add_executable(ch03-3-Instance-1 src/3/ch03-3-Instance-1.cpp src/3/vbm.h src/3/vbm.cpp)
 SET_PROPERTY(TARGET ch03-3-Instance-1 PROPERTY FOLDER "ch03")
 
+#  对上一个案例的修改，使用
+add_executable(ch03-4-Instance-2 src/3/ch03-4-Instance-2.cpp src/3/vbm.h src/3/vbm.cpp)
+SET_PROPERTY(TARGET ch03-4-Instance-2 PROPERTY FOLDER "ch03")
+
 add_executable(primitiverestart src/3/ch03_primitive_restart.cpp)
 SET_PROPERTY(TARGET primitiverestart PROPERTY FOLDER "ch03")
 
