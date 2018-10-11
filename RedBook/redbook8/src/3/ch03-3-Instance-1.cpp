@@ -54,7 +54,8 @@ void Instance_1::Initialize(const char* title)
 	m_view_matrix_loc = glGetUniformLocation(m_prog,"view_matrix");
 	//m_model_matrix_loc = glGetUniformLocation(m_prog,"model_matrix");
 	m_projection_matrix_loc = glGetUniformLocation(m_prog,"projection_matrix");
-    m_object.LoadFromVBM("I:\\co\\LearnOpenGL\\RedBook\\redbook8\\oglpg-8th-edition\/media/armadillo_low.vbm", 0, 1, 2);
+	std::string path = Utils::instance()->getMediaPath() + "Media\\armadillo_low.vbm";
+    m_object.LoadFromVBM(path.c_str(), 0, 1, 2);
 	m_object.BindVertexArray();
 	
 

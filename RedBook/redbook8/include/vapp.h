@@ -12,6 +12,7 @@ protected:
 	static Application* s_app;
 	static void DisplayFunc();
 	static void ReshapeFunc(int width, int height);
+	static void KeyboardFunc(unsigned char key, int x, int y );
 	
 #ifdef _DEBUG
 	static void APIENTRY DebugOutputCallback(GLenum source,
@@ -45,6 +46,7 @@ public:
 		glutCreateWindow(title ? title : "OpenGL Application");
 		glutDisplayFunc(DisplayFunc);
 		glutReshapeFunc(ReshapeFunc);
+		glutKeyboardFunc(KeyboardFunc);
 		
 		#ifdef USE_GL3W
         gl3wInit();
@@ -142,6 +144,12 @@ int main(int argc, char ** argv)                            \
     return 0;                                               \
 }                                                           \
                                                             \
+void Application::KeyboardFunc(unsigned char key, int x, int y) \
+{															\
+    if(key==27)												\
+        exit(0);											\
+}
+
 DEBUG_OUTPUT_CALLBACK
 
 #endif // __VAPP_H__
