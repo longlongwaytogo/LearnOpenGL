@@ -55,6 +55,16 @@ SET_PROPERTY(TARGET ch03-3-Instance-1 PROPERTY FOLDER "ch03")
 add_executable(ch03-4-Instance-2 src/3/ch03-4-Instance-2.cpp src/3/vbm.h src/3/vbm.cpp)
 SET_PROPERTY(TARGET ch03-4-Instance-2 PROPERTY FOLDER "ch03")
 
-add_executable(primitiverestart src/3/ch03_primitive_restart.cpp)
-SET_PROPERTY(TARGET primitiverestart PROPERTY FOLDER "ch03")
+add_executable(ch03-5-primitiverestart src/3/ch03_primitive_restart.cpp)
+SET_PROPERTY(TARGET ch03-5-primitiverestart PROPERTY FOLDER "ch03")
+
+
+#ch04 
+add_executable(ch04-1-DrawColor src/4/Triangle.cpp)
+SET_PROPERTY(TARGET ch04-1-DrawColor PROPERTY FOLDER "ch04")
+
+#ch05
+add_executable(ch05-transformFeedback src/5/ch05-transformFeedback.cpp)
+SET_PROPERTY(TARGET ch05-transformFeedback PROPERTY FOLDER "ch05")
+
 

@@ -2,6 +2,8 @@
 
 #version 330
 
+// 使用glVertexAttribPointer设置的属性，都是早期版本中， 
+//使用Attrib关键字声明的变量，表示定点的某种属性信息
 // position and normal are regular vertex attributes
 layout(location = 0) in vec4 position;
 layout(location = 1) in vec3 normal;
