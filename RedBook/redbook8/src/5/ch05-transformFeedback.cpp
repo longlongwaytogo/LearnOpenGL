@@ -92,18 +92,16 @@ void TransformFeedback::Initialize(const char* title)
 		{GL_NONE,NULL}
 	};
 	
-	m_base_model_matrix_loc = glGetUniformLocation(m_baseProg,"model_matrix");
-	m_base_projection_matrix_loc = glGetUniformLocation(m_baseProg,"projection_matrix");
-	 
 	m_updateProg = LoadShaders(update_shader_info);
 	glUseProgram(m_updateProg);
-	
+
+ 		
 	m_update_model_matrix_loc = glGetUniformLocation(m_updateProg,"model_matrix");
 	m_update_projection_matrix_loc = glGetUniformLocation(m_updateProg,"projection_matrix");
 
 	m_triangle_count_loc = glGetUniformLocation(m_updateProg,"triangle_count");
 	m_time_step_loc = glGetUniformLocation(m_updateProg,"time_step");
- 	
+
 	static const char* varyings[] = 
 	{
 		"position_out", "velocity_out"
@@ -121,7 +119,7 @@ void TransformFeedback::Initialize(const char* title)
 	m_baseProg = LoadShaders(base_shader_info);
 	glUseProgram(m_baseProg);
 
-	m_base_model_matrix_loc = glGetUniformLocation(m_baseProg,"view_matrix");
+	m_base_model_matrix_loc = glGetUniformLocation(m_baseProg,"model_matrix");
 	m_base_projection_matrix_loc = glGetUniformLocation(m_baseProg,"projection_matrix");
 	
 	static const char * varyings2[] =
