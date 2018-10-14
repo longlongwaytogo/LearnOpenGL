@@ -129,7 +129,7 @@ void TransformFeedback::Initialize(const char* title)
 	
 	glTransformFeedbackVaryings(m_baseProg,1,varyings2,GL_INTERLEAVED_ATTRIBS);
 	glLinkProgram(m_baseProg);
-	//glUseProgram(m_baseProg);
+	glUseProgram(m_baseProg);
 	
 	glGenVertexArrays(2,m_VAO);
 	glGenBuffers(2,m_VBO);
@@ -256,7 +256,7 @@ void TransformFeedback::Display(bool auto_redraw)
 	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER,0,m_geometry_tbo); 
 	
 	glBeginTransformFeedback(GL_TRIANGLES);
-	m_object.Render(0,1);
+	m_object.Render();
 	glEndTransformFeedback();
 	
 	glUseProgram(m_updateProg);
