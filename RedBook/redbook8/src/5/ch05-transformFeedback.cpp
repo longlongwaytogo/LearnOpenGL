@@ -47,12 +47,12 @@ virtual void Reshape(int width, int height);
 private:
 
 	float  m_aspect;
-	GLuint m_baseProg;
-	GLuint m_updateProg;
-	GLuint m_VAO[2];
-	GLuint m_VBO[2];
+	GLuint m_baseProg;   // 用于绘制物体
+	GLuint m_updateProg; // 用于绘制更新的粒子
+	GLuint m_VAO[2];     // 用于关联粒子系统的VBO
+	GLuint m_VBO[2];     // 保存粒子坐标、速度信息
 	//GLuint m_xfb; // transformFeedback 对象
-	GLuint m_base_VAO; 
+	GLuint m_feedback_VAO;  // 用于关联 给feedback使用胡tbo
 	GLuint m_geometry_tbo;
 	GLuint m_geometry_tex;
 	
@@ -134,9 +134,7 @@ void TransformFeedback::Initialize(const char* title)
 	glGenVertexArrays(2,m_VAO);
 	glGenBuffers(2,m_VBO);
 	
-	//glGenTransformFeedbacks(1, &m_xfb);
-	//glBindTransformFeedback(GL_TRANSFORM_FEEDBACK,m_xfb);
-	
+	//此处没有调用glGenTransformFeedbacks和glBindTransformFeedback函数，因为系统存在一个默认的feedback，可以直接使用	
 	for(int i = 0 ; i < 2; ++i)
 	{
 		glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER,m_VBO[i]);
@@ -176,7 +174,7 @@ void TransformFeedback::Initialize(const char* title)
 		GLboolean normalized,
 		GLsizei stride,
 		const void* pointer);
-*/
+		*/
 		glVertexAttribPointer(0,4,GL_FLOAT,GL_FALSE,
 		sizeof(vec4) + sizeof(vec3),0);
 		glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,
@@ -189,6 +187,9 @@ void TransformFeedback::Initialize(const char* title)
 		glDisableVertexAttribArray(1);
 	}
 	
+	// 创建tbo，用于保存三角形顶点数据，此处的tbo被同时绑定到两个对象中，
+	// 1. tbo被绑定到feedback中，用于捕获模型绘制的三角形数据
+	// 2. tbo被绑定到纹理对象，用于例子系统中获取三角形数据
 	glGenBuffers(1,&m_geometry_tbo);
 	glGenTextures(1,&m_geometry_tex);
 	glBindBuffer(GL_TEXTURE_BUFFER,m_geometry_tbo);
@@ -201,8 +202,8 @@ void TransformFeedback::Initialize(const char* title)
 	glTexBuffer(GL_TEXTURE_BUFFER,GL_RGBA32F,m_geometry_tbo);
 	
 	//  
-	glGenVertexArrays(1, &m_base_VAO);
-	glBindVertexArray(m_base_VAO);
+	glGenVertexArrays(1, &m_feedback_VAO);
+	glBindVertexArray(m_feedback_VAO);
 	glBindBuffer(GL_ARRAY_BUFFER,m_geometry_tbo);
 	glVertexAttribPointer(0,4,GL_FLOAT,GL_FALSE,0,NULL);
 	glEnableVertexAttribArray(0);
@@ -227,7 +228,7 @@ void TransformFeedback::Reshape(int width, int height)
 void TransformFeedback::Display(bool auto_redraw)
 {
 	static int frame_count = 0;
-	float t = float(GetTickCount() & 0x3FFF) / float(0x3FFF);
+	float t = float(GetTickCount() & 0x3FFFF) / float(0x3FFFF);
 	static float q = 0.0f;
 	static const vmath::vec3 X(1.0f, 0.0f, 0.0f);
 	static const vmath::vec3 Y(0.0f, 1.0f, 0.0f);
@@ -252,11 +253,12 @@ void TransformFeedback::Display(bool auto_redraw)
 	glUniformMatrix4fv(m_base_model_matrix_loc, 1, GL_FALSE, model_matrix);
 	glUniformMatrix4fv(m_base_projection_matrix_loc,1,GL_FALSE, projection_matrix);
 	
-	glBindVertexArray(m_base_VAO);
+	glBindVertexArray(m_feedback_VAO);
 	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER,0,m_geometry_tbo); 
 	
+	// 捕获三角形顶点数据
 	glBeginTransformFeedback(GL_TRIANGLES);
-	m_object.Render(0,1);
+	m_object.Render();
 	glEndTransformFeedback();
 	
 	glUseProgram(m_updateProg);
@@ -264,29 +266,36 @@ void TransformFeedback::Display(bool auto_redraw)
 	glUniformMatrix4fv(m_update_model_matrix_loc,1,GL_FALSE,model_matrix);
 	glUniformMatrix4fv(m_update_projection_matrix_loc,1,GL_FALSE,projection_matrix);
 	glUniform1i(m_triangle_count_loc,m_object.GetVertexCount()/3);
+	
+	// 时间控制
 	if( t > q)
 	{
 		glUniform1f(m_time_step_loc,(t-q)*2000.0f);
+		// printf("time:%f\n",(t-q)*2000.0f);
 	}
 	
 	q = t;
 	
+	// 每隔一帧，交换VBO，使用两个VBO，一个用于当前绘制的数据，一个用于feedback，捕获更新后的三角形顶点和速度信息
 	if((frame_count & 1) != 0)
 	{
-		glBindVertexArray(m_VAO[1]);
-		glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER,0,m_VBO[0]);
+		glBindVertexArray(m_VAO[1]);  // 启用用于绘制的VBO，即m_VBO[1];
+		glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER,0,m_VBO[0]); // 使用m_VBO[0]捕获粒子系统的当前位置和速度
+		// printf("frame:%d\n",frame_count);
 	}
 	else
 	{
-		glBindVertexArray(m_VAO[1]);
+		glBindVertexArray(m_VAO[0]);// 启用用于绘制的VBO，即m_VBO[0];
 		glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER,0,m_VBO[1]);
 	}
 	
 	glBeginTransformFeedback(GL_POINTS);
 	glDrawArrays(GL_POINTS,0,min(point_count,(frame_count >> 3)));
+	glEndTransformFeedback();
 	
 	glBindVertexArray(0);
 	glUseProgram(0);
+	
 	frame_count++;
 	
 	base::Display();
@@ -297,6 +306,6 @@ void TransformFeedback::Finalize()
 	glDeleteBuffers(2, m_VBO);
 	glDeleteBuffers(1,&m_geometry_tbo);
     glDeleteVertexArrays(2, m_VAO);
-	glDeleteVertexArrays(1,&m_base_VAO);
+	glDeleteVertexArrays(1,&m_feedback_VAO);
 }
  

@@ -64,7 +64,7 @@ add_executable(ch04-1-DrawColor src/4/Triangle.cpp)
 SET_PROPERTY(TARGET ch04-1-DrawColor PROPERTY FOLDER "ch04")
 
 #ch05
-add_executable(ch05-transformFeedback src/5/ch05-transformFeedback.cpp)
+add_executable(ch05-transformFeedback src/5/ch05-transformFeedback.cpp src/5/vbm.h src/5/vbm.cpp)
 SET_PROPERTY(TARGET ch05-transformFeedback PROPERTY FOLDER "ch05")
 
 
