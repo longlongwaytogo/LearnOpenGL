@@ -10,8 +10,16 @@
 #include <Windows.h>
 #include <io.h>
 
+//#define USE_GL3W
+#ifndef USE_GL3W
+
 #define GLEW_STATIC
 #include <GL/glew.h>
+#else
+#include <GL3/gl3.h>
+#include <GL3/gl3w.h>
+#endif
+
 #include "LoadShaders.h"
 
 #ifdef __cplusplus
@@ -123,7 +131,14 @@ LoadShaders( ShaderInfo* shaders )
 
             GLchar* log = new GLchar[len+1];
             glGetShaderInfoLog( shader, len, &len, log );
-            std::cerr << "Shader compilation failed: " << log << std::endl;
+			std::string type = "vertex_shader";
+			if(entry->type == GL_VERTEX_SHADER)
+				type = "vertex_shader";
+			else if( entry->type == GL_FRAGMENT_SHADER)
+				type = "fragment_shader";
+			else
+				type = "unknown type";
+            std::cerr <<"type:" << type << ":Shader compilation failed: " << log << std::endl;
             delete [] log;
 #endif /* DEBUG */
 

@@ -37,6 +37,7 @@ SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 
 
 add_library(comm src/comm/gl3w.c src/comm/LoadShaders.cpp src/comm/targa.cpp src/comm/vbm.cpp)
+add_library(vermilion   src/vermilion/loadtexture.cpp src/vermilion/vdds.cpp)
 # µÚÒ»ÕÂ
 add_executable(triangles src/1/triangles.cpp)
 SET_PROPERTY(TARGET triangles PROPERTY FOLDER "ch01")
@@ -55,8 +56,8 @@ SET_PROPERTY(TARGET ch03-3-Instance-1 PROPERTY FOLDER "ch03")
 add_executable(ch03-4-Instance-2 src/3/ch03-4-Instance-2.cpp src/3/vbm.h src/3/vbm.cpp)
 SET_PROPERTY(TARGET ch03-4-Instance-2 PROPERTY FOLDER "ch03")
 
-add_executable(ch03-5-primitiverestart src/3/ch03_primitive_restart.cpp)
-SET_PROPERTY(TARGET ch03-5-primitiverestart PROPERTY FOLDER "ch03")
+add_executable(ch03-5-Primitiverestart src/3/ch03_primitive_restart.cpp)
+SET_PROPERTY(TARGET ch03-5-Primitiverestart PROPERTY FOLDER "ch03")
 
 
 #ch04 
@@ -64,7 +65,31 @@ add_executable(ch04-1-DrawColor src/4/Triangle.cpp)
 SET_PROPERTY(TARGET ch04-1-DrawColor PROPERTY FOLDER "ch04")
 
 #ch05
-add_executable(ch05-transformFeedback src/5/ch05-transformFeedback.cpp src/5/vbm.h src/5/vbm.cpp)
-SET_PROPERTY(TARGET ch05-transformFeedback PROPERTY FOLDER "ch05")
+add_executable(ch05-TransformFeedback src/5/ch05-transformFeedback.cpp src/5/vbm.h src/5/vbm.cpp)
+SET_PROPERTY(TARGET ch05-TransformFeedback PROPERTY FOLDER "ch05")
 
+#ch06
+add_executable(ch06-1-Texture-Data src/6/TextureData.cpp)
+target_link_libraries(ch06-1-Texture-Data vermilion)
+SET_PROPERTY(TARGET ch06-1-Texture-Data PROPERTY FOLDER "ch06")
+
+add_executable(ch06-1-Texture-Data-2 src/6/TextureData2.cpp)
+target_link_libraries(ch06-1-Texture-Data-2 vermilion)
+SET_PROPERTY(TARGET ch06-1-Texture-Data-2 PROPERTY FOLDER "ch06")
+
+add_executable(ch06-2-Texture-Wrapping src/6/texture_wrapping.cpp)
+target_link_libraries(ch06-2-Texture-Wrapping vermilion)
+SET_PROPERTY(TARGET ch06-2-Texture-Wrapping PROPERTY FOLDER "ch06")
+
+add_executable(ch06-3-Load-Texture src/6/LoadTexture.cpp)
+target_link_libraries(ch06-3-Load-Texture vermilion)
+SET_PROPERTY(TARGET ch06-3-Load-Texture PROPERTY FOLDER "ch06")
+
+add_executable(ch06-4-Texture-Unit src/6/TextureUnit.cpp)
+target_link_libraries(ch06-4-Texture-Unit vermilion)
+SET_PROPERTY(TARGET ch06-4-Texture-Unit PROPERTY FOLDER "ch06")
+
+add_executable(ch06-5-CubeMap src/6/CubeMap.cpp)
+target_link_libraries(ch06-5-CubeMap vermilion)
+SET_PROPERTY(TARGET ch06-5-CubeMap PROPERTY FOLDER "ch06")
 

@@ -2,6 +2,7 @@
 #define __VAPP_H__
 
 #include <vgl.h>
+#include <stdio.h>
 
 class Application
 {
@@ -48,8 +49,14 @@ public:
 		glutReshapeFunc(ReshapeFunc);
 		glutKeyboardFunc(KeyboardFunc);
 		
-		#ifdef USE_GL3W
-        gl3wInit();
+#ifdef USE_GL3W
+       // gl3wInit();
+		 if (gl3wInit()) {
+                fprintf(stderr, "failed to initialize OpenGL\n");
+				exit(0);
+                return ;
+        }
+
 #else
         glewInit();
 #endif

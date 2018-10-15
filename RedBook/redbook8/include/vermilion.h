@@ -64,15 +64,15 @@ GLuint vglLoadTexture(const char* filename,
 #if !defined VERMILION_BUILD_LIB
   #ifdef _M_X64
     #ifdef _DEBUG
-      #pragma comment (lib, "vermilion64_d.lib")
+      #pragma comment (lib, "vermilion_d.lib")
     #else
-      #pragma comment (lib, "vermilion64.lib")
+      #pragma comment (lib, "vermilion.lib")
     #endif /* _DEBUG */
   #else
     #ifdef _DEBUG
-     #pragma comment (lib, "vermilion32_d.lib")
+     #pragma comment (lib, "vermilion_d.lib")
     #else
-      #pragma comment (lib, "vermilion32.lib")
+      #pragma comment (lib, "vermilion.lib")
     #endif /* _DEBUG */
   #endif /* _M_X64 */
 #endif /* VERMILION_BUILD_LIB */
