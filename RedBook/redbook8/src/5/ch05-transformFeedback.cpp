@@ -129,7 +129,7 @@ void TransformFeedback::Initialize(const char* title)
 	
 	glTransformFeedbackVaryings(m_baseProg,1,varyings2,GL_INTERLEAVED_ATTRIBS);
 	glLinkProgram(m_baseProg);
-	//glUseProgram(m_baseProg);
+	glUseProgram(m_baseProg);
 	
 	glGenVertexArrays(2,m_VAO);
 	glGenBuffers(2,m_VBO);

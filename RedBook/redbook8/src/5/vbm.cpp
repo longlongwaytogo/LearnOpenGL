@@ -58,7 +58,7 @@ bool VBObject::LoadFromVBM(const char * filename, int vertexIndex, int normalInd
         int attribIndex = i;
 
         if(attribIndex == 0)
-            attribIndex = vertexIndex;  //顶点，法线，纹理坐标
+            attribIndex = vertexIndex;  //椤剁偣锛屾硶绾匡紝绾圭悊鍧愭爣
         else if(attribIndex == 1)
             attribIndex = normalIndex;
          else if(attribIndex == 2)
