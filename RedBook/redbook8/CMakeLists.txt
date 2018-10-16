@@ -104,3 +104,11 @@ SET_PROPERTY(TARGET ch06-7-MipmapFilter PROPERTY FOLDER "ch06")
 add_executable(ch06-8-Mipmap src/6/Mipmap.cpp)
 target_link_libraries(ch06-8-Mipmap vermilion)
 SET_PROPERTY(TARGET ch06-8-Mipmap PROPERTY FOLDER "ch06")
+
+add_executable(ch06-9-PointSprite-1 src/6/PointSprite.cpp)
+target_link_libraries(ch06-9-PointSprite-1 vermilion)
+SET_PROPERTY(TARGET ch06-9-PointSprite-1  PROPERTY FOLDER "ch06")
+
+add_executable(ch06-10-PointSprite-2 src/6/PointSprite2.cpp)
+target_link_libraries(ch06-10-PointSprite-2 vermilion)
+SET_PROPERTY(TARGET ch06-10-PointSprite-2  PROPERTY FOLDER "ch06")
