@@ -33,93 +33,97 @@ BEGIN_APP_DECLARATION(LoadTexture)
     virtual void Reshape(int width, int height);
 
     // Member variables
-    float m_aspect;
-    GLuint m_base_prog;
-    GLuint m_vao;
-    GLuint m_skybox_vbo;
+    float  m_aspect;
+    GLuint m_object_program;
+	GLuint m_skybox_program;
+    GLuint m_cube_vao;
+	GLuint m_cube_vbo;
+	GLuint m_cube_ebo;
+	GLuint m_skybox_rotate_loc;
+	GLuint m_object_mvp_loc;
+	GLuint m_object_mv_loc;
     GLuint m_tex;
-	GLuint m_program;
-	
 	VBObject m_object;
 
 END_APP_DECLARATION()
 
-	
 #define TEST 0
-DEFINE_APP(LoadTexture, "LoadTexture")
+DEFINE_APP(LoadTexture, "CubeMap")
 
 void LoadTexture::Initialize(const char * title)
 {
 	base::Initialize(title);
 
-	ShaderInfo shaders[] = {
-		{GL_VERTEX_SHADER, "Media/Shaders/6/TextureData.vs.glsl"},
-		{GL_FRAGMENT_SHADER, "Media/Shaders/6/TextureData.fs.glsl"},
+	ShaderInfo shaders_skybox[] = {
+		{GL_VERTEX_SHADER, "Media/Shaders/6/TextureCubeMap.vs.glsl"},
+		{GL_FRAGMENT_SHADER, "Media/Shaders/6/TextureCubeMap.fs.glsl"},
 		{GL_NONE,NULL}
 	};
 	
-	m_program = LoadShaders(shaders);
-
-	glUseProgram(m_program);
-	GLuint tex_loc = glGetUniformLocation(m_program, "tex");
-	glUniform1i(tex_loc, 0);
-
-	glGenBuffers(1,&m_skybox_vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, m_skybox_vbo);
-	
-	/*static const GLfloat quad_data[] = {
-		0.75f, -0.75f,
-        -0.75f, -0.75f,
-        -0.75f, 0.75f,
-         0.75f, 0.75f,
-
-         0.0f, 0.0f,
-         1.0f, 0.0f,
-         1.0f, 1.0f,
-         0.0f, 1.0f
-	};*/
-
-	static const GLfloat quad_data[] =
-	{
-		1.0f, -1.0f,
-		-1.0f, -1.0f,
-		-1.0f, 1.0f,
-		1.0f, 1.0f,
-
-		0.0f, 0.0f,
-		1.0f, 0.0f,
-		1.0f, 1.0f,
-		0.0f, 1.0f,
+	ShaderInfo shaders_object[] = {
+		{GL_VERTEX_SHADER, "Media/Shaders/6/TextureCubeMapObject.vs.glsl"},
+		{GL_FRAGMENT_SHADER,"Media/Shaders/6/TextureCubeMapObject.fs.glsl"},
+		{GL_NONE,NULL}
 	};
+	
+	m_skybox_program = LoadShaders(shaders_skybox);
+	m_object_program = LoadShaders(shaders_object);
+ 
+	m_skybox_rotate_loc = glGetUniformLocation(m_skybox_program, "tc_rotate");
+	m_object_mvp_loc = glGetUniformLocation(m_object_program,"mat_mvp");
+	m_object_mv_loc = glGetUniformLocation(m_object_program,"mat_mv");
+	
+	glGenBuffers(1,&m_cube_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, m_cube_vbo);
+	
+  static const GLfloat cube_vertices[] =
+    {
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f,  1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f,  1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f,  1.0f
+    };
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(quad_data),quad_data,GL_STATIC_DRAW);
+    static const GLushort cube_indices[] =
+    {
+        0, 1, 2, 3, 6, 7, 4, 5,         // First strip
+        2, 6, 0, 4, 1, 5, 3, 7          // Second strip
+    };
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vertices),cube_vertices,GL_STATIC_DRAW);
 
 	// bind vertexarray buffer
-	glGenVertexArrays(1,&m_vao);
-	glBindVertexArray(m_vao);	
+	glGenVertexArrays(1,&m_cube_vao);
+	glBindVertexArray(m_cube_vao);	
 	
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-	//glVertexAttribPointer(1, 2, GL_FLOAT, FALSE, 0, BUFFER_OFFSET(sizeof(quad_data)));
-
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(8 * sizeof(float)));
-	
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
+	 
+	glGenBuffers(1, &m_cube_ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,m_cube_ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(cube_indices),cube_indices,GL_STATIC_DRAW);
 	
 	vglImageData image;
-	std::string imageFile = Utils::instance()->getMediaPath() + "Media/textures/test.dds";
+	std::string imageFile = Utils::instance()->getMediaPath() + "Media/textures/TantolundenCube.dds";
 	m_tex = vglLoadTexture(imageFile.c_str(),0,&image);
 	
 	glTexParameteri(image.target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	vglUnloadImage(&image);
+	std::string filePath = Utils::instance()->getMediaPath() + "Media/unit_torus.vbm";
+	m_object.LoadFromVBM(filePath.c_str(),0,1,2);
 }
 
 void LoadTexture::Finalize()
 {
 	glUseProgram(0);
 	glDeleteTextures(1,&m_tex);
-	glDeleteVertexArrays(1,&m_vao);
-	glDeleteBuffers(1,&m_skybox_vbo);
+	glDeleteVertexArrays(1,&m_cube_vao);
+	glDeleteBuffers(1,&m_cube_vbo);
+	glDeleteBuffers(1,&m_cube_ebo);
 }
 
 void LoadTexture::Reshape(int width, int height)
@@ -130,21 +134,50 @@ void LoadTexture::Reshape(int width, int height)
 
 void LoadTexture::Display(bool auto_redraw)
 {
-	float t = float(GetTickCount()&0x3FF)/float(0x3FFF);
+	static const unsigned int start_time = GetTickCount();
+	float t = float(GetTickCount()&0x3FFF)/float(0x3FFF);
 	static const vmath::vec3 X(1.0f, 0.0f, 0.0f);
 	static const vmath::vec3 Y(0.0f, 1.0f, 0.0f);
 	static const vmath::vec3 Z(0.0f, 0.0f, 1.0f);
 	
-	glClearColor(0.03f, 0.03f ,0.2f,1.0f);
+	vmath::mat4 tc_matrix(vmath::mat4::identity());
+	
+	glClearColor(0.0f, 0.0f ,0.2f,1.0f);
 	glClearDepth(1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
+	glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 	glDisable(GL_CULL_FACE);
-	glUseProgram(m_program);
 	
-	glBindVertexArray(m_vao);
-	glBindTexture(GL_TEXTURE_2D,m_tex);
-	glDrawArrays(GL_TRIANGLE_FAN,0,4);
+	glUseProgram(m_skybox_program);
+
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);	
+	tc_matrix = vmath::perspective(35.0f, 1.0f / m_aspect, 0.1f, 100.0f) * tc_matrix;
+	glUniformMatrix4fv(m_skybox_rotate_loc,1,GL_FALSE,tc_matrix);
+
 	
+	glBindVertexArray(m_cube_vao);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,m_cube_ebo);
+	//glBindTexture(GL_TEXTURE_2D,m_tex);
+	glDrawElements(GL_TRIANGLE_STRIP, 8, GL_UNSIGNED_SHORT,NULL);
+	glDrawElements(GL_TRIANGLE_STRIP, 8, GL_UNSIGNED_SHORT, BUFFER_OFFSET(8 * sizeof(GLushort)));
+	
+	
+	
+	glUseProgram(m_object_program);
+	tc_matrix = vmath::translate(vmath::vec3(0.0f, 0.0f ,-4.0f)) * 
+				vmath::rotate(80.0f * 3.0f * t, Y) * 
+				vmath::rotate(70.0f * 3.0f * t, Z);
+	
+	glUniformMatrix4fv(m_object_mv_loc,1,GL_FALSE,tc_matrix);
+	
+	tc_matrix = vmath::perspective(35.0f,1.0f/m_aspect,0.1f,100.0f) * tc_matrix;
+	glUniformMatrix4fv(m_object_mvp_loc,1,GL_FALSE,tc_matrix);
+	 
+    glClear(GL_DEPTH_BUFFER_BIT);
+	
+	m_object.Render();
+
 	base::Display();
 }
