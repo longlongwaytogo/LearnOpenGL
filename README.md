@@ -46,3 +46,6 @@ Opengl red book
 
 ## 颜色混合opengl--glBlendFunc函数
 [https://www.cnblogs.com/ylwn817/archive/2012/09/07/2675285.html]()
+
+## 从未停止！OpenGL的版本历史和发展
+[http://www.cnblogs.com/vertexshader/articles/2917540.html]()
