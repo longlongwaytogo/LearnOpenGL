@@ -93,3 +93,14 @@ add_executable(ch06-5-CubeMap src/6/CubeMap.cpp)
 target_link_libraries(ch06-5-CubeMap vermilion)
 SET_PROPERTY(TARGET ch06-5-CubeMap PROPERTY FOLDER "ch06")
 
+add_executable(ch06-6-VolumeTexture src/6/VolumeTexture.cpp)
+target_link_libraries(ch06-6-VolumeTexture vermilion)
+SET_PROPERTY(TARGET ch06-6-VolumeTexture PROPERTY FOLDER "ch06")
+
+add_executable(ch06-7-MipmapFilter src/6/Mipmap_Filter.cpp)
+target_link_libraries(ch06-7-MipmapFilter vermilion)
+SET_PROPERTY(TARGET ch06-7-MipmapFilter PROPERTY FOLDER "ch06")
+
+add_executable(ch06-8-Mipmap src/6/Mipmap.cpp)
+target_link_libraries(ch06-8-Mipmap vermilion)
+SET_PROPERTY(TARGET ch06-8-Mipmap PROPERTY FOLDER "ch06")

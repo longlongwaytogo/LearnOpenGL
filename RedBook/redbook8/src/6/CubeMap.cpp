@@ -1,7 +1,7 @@
-// ch06-01-LoadTexture
+// ch06-01-CubeMap
 ///////////////////////////////////////////////////////////////////////\
 //
-// LoadTexture.cpp
+// CubeMap.cpp
 //
 /////////////////////////////////////////////////////////////////
 
@@ -25,7 +25,7 @@
 
 #include <stdio.h>
 
-BEGIN_APP_DECLARATION(LoadTexture)
+BEGIN_APP_DECLARATION(CubeMap)
     // Override functions from base class
     virtual void Initialize(const char * title);
     virtual void Display(bool auto_redraw);
@@ -48,9 +48,9 @@ BEGIN_APP_DECLARATION(LoadTexture)
 END_APP_DECLARATION()
 
 #define TEST 0
-DEFINE_APP(LoadTexture, "CubeMap")
+DEFINE_APP(CubeMap, "CubeMap")
 
-void LoadTexture::Initialize(const char * title)
+void CubeMap::Initialize(const char * title)
 {
 	base::Initialize(title);
 
@@ -117,7 +117,7 @@ void LoadTexture::Initialize(const char * title)
 	m_object.LoadFromVBM(filePath.c_str(),0,1,2);
 }
 
-void LoadTexture::Finalize()
+void CubeMap::Finalize()
 {
 	glUseProgram(0);
 	glDeleteTextures(1,&m_tex);
@@ -126,16 +126,16 @@ void LoadTexture::Finalize()
 	glDeleteBuffers(1,&m_cube_ebo);
 }
 
-void LoadTexture::Reshape(int width, int height)
+void CubeMap::Reshape(int width, int height)
 {
 	glViewport(0, 0, width, height);
 	m_aspect = float(height) / float(width);
 }
 
-void LoadTexture::Display(bool auto_redraw)
+void CubeMap::Display(bool auto_redraw)
 {
 	static const unsigned int start_time = GetTickCount();
-	float t = float(GetTickCount()&0x3FFF)/float(0x3FFF);
+	float t = float(GetTickCount()-start_time)/float(0x3FFF);
 	static const vmath::vec3 X(1.0f, 0.0f, 0.0f);
 	static const vmath::vec3 Y(0.0f, 1.0f, 0.0f);
 	static const vmath::vec3 Z(0.0f, 0.0f, 1.0f);
