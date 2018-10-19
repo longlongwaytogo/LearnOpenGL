@@ -14,6 +14,9 @@ protected:
 	static void DisplayFunc();
 	static void ReshapeFunc(int width, int height);
 	static void KeyboardFunc(unsigned char key, int x, int y );
+	static void MouseEventFunc(int button,int state,int x,int y);
+	static void MouseMotionFunc(int x, int y);
+	 
 	
 #ifdef _DEBUG
 	static void APIENTRY DebugOutputCallback(GLenum source,
@@ -48,6 +51,8 @@ public:
 		glutDisplayFunc(DisplayFunc);
 		glutReshapeFunc(ReshapeFunc);
 		glutKeyboardFunc(KeyboardFunc);
+		glutMouseFunc(MouseEventFunc);
+		glutMotionFunc(MouseMotionFunc);
 		
 #ifdef USE_GL3W
        // gl3wInit();
@@ -84,9 +89,27 @@ public:
 	virtual void Reshape(int width, int height)
     {
         glViewport(0, 0, width, height);
+		
     }
-	
 
+	virtual void Reshape2(int width, int height)
+    {
+        glViewport(0, 0, width, height);
+		
+    }
+
+	virtual void Keyboard(unsigned char key, int x, int y )
+	{
+	}
+
+	virtual void MouseEvent(int button,int state,int x,int y)
+	{
+	}
+
+	virtual void MouseDownMotion(int x,int y)
+	{
+
+	}
 
 };
 
@@ -121,7 +144,7 @@ void APIENTRY 			Application::DebugOutputCallback(GLenum source,         \
 #endif
 
 #define DEFINE_APP(appclass,title)                          \
-		  Application * Application::s_app;				   \
+		  Application * Application::s_app;				    \
                                                             \
 void Application::DisplayFunc(void)          			     \
 {                                                           \
@@ -139,6 +162,22 @@ void  Application::MainLoop(void)							 \
     for (;;)                                                \
         glutMainLoopEvent();                                \
 }                                                           \
+															\
+void Application::KeyboardFunc(unsigned char key, int x, int y) \
+{															\
+    if(key==27)												\
+        exit(0);											\
+	 s_app->Keyboard(key,x,y);								\
+}															\
+void Application::MouseEventFunc(int button,int state,int x,int y) \
+{															\
+	s_app->MouseEvent(button,state,x,y);				   \
+}															\
+															\
+void Application::MouseMotionFunc(int x, int y)		    	\
+{															\
+	s_app->MouseDownMotion(x,y);							\
+}															\
                                                             \
 int main(int argc, char ** argv)                            \
 {                                                           \
@@ -149,13 +188,8 @@ int main(int argc, char ** argv)                            \
     app->Finalize();                                        \
                                                             \
     return 0;                                               \
-}                                                           \
-                                                            \
-void Application::KeyboardFunc(unsigned char key, int x, int y) \
-{															\
-    if(key==27)												\
-        exit(0);											\
-}
+}                                                           
+
 
 DEBUG_OUTPUT_CALLBACK
 

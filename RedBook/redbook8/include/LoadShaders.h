@@ -53,6 +53,8 @@ typedef struct {
 
 GLuint LoadShaders( ShaderInfo* );
 
+void ShowShaderInfo(GLuint program);
+
 //----------------------------------------------------------------------------
 
 #ifdef __cplusplus

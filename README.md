@@ -49,3 +49,22 @@ Opengl red book
 
 ## 从未停止！OpenGL的版本历史和发展
 [http://www.cnblogs.com/vertexshader/articles/2917540.html]()
+
+
+
+
+其他图形学相关书籍：
+
+1.  Ray Tracking in on week:  
+   [code](https://github.com/petershirley/raytracinginoneweekend),  
+   [code2](https://github.com/petershirley/raytracinginoneweekend/releases/tag/v1.54.0)   
+   [图形跟班的博客](https://blog.csdn.net/libing_zeng/article/list/20)   
+   [图形跟班的github](https://github.com/libingzeng/AnIntroductionToRayTracing)  
+- 《线性代数及应用》  
+- [pbrt-v3](https://github.com/mmp/pbrt-v3/tree/book)
+- [实时渲染](http://www.realtimerendering.com/#books-small-table)
+
+- [全局光照:光线追踪、路径追踪与GI技术进化编年史
+](https://www.cnblogs.com/machong8183/p/7543724.html)
+
+2. [http://www.klayge.org/docs/%E5%BC%80%E5%8F%91%E8%B5%84%E6%96%99/]()

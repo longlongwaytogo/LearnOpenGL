@@ -183,6 +183,73 @@ LoadShaders( ShaderInfo* shaders )
 }
 
 //----------------------------------------------------------------------------
+// 显示progam属性信息
+void ShowShaderInfo(GLuint program)
+{
+	std::cout << "--------------show program info:-----------------" << std::endl;
+	GLint outputs = 0;
+	glGetProgramInterfaceiv(program,GL_PROGRAM_INPUT, GL_ACTIVE_RESOURCES,&outputs);
+	static const GLenum props[] = {GL_TYPE,GL_LOCATION};
+	GLint params[2];
+	GLchar name[64];
+	const char* type_name;
+
+	if(outputs > 0)
+		std::cout << "***Input:***" << std::endl;
+
+	for(int i = 0; i != outputs; ++i)
+	{
+		//  glGetProgramResourceName(GLuint program, GLenum programInterface, GLuint index, GLsizei bufSize, GLsizei* length, GLchar *name);
+		glGetProgramResourceName(program,GL_PROGRAM_INPUT,i,sizeof(name),NULL, name);
+		
+		glGetProgramResourceiv(program,GL_PROGRAM_INPUT, i, 2, props, 2, NULL,params);
+		type_name = name;
+
+		std::cout << "(" << type_name << ")" << "location:" << params[1] << std::endl;
+	}
+
+	glGetProgramInterfaceiv(program,GL_PROGRAM_OUTPUT,GL_ACTIVE_RESOURCES,&outputs);
+	if(outputs >0)
+		std::cout <<"***Output:***" << std::endl;
+
+	for(int i = 0; i != outputs; ++i)
+	{
+		glGetProgramResourceName(program,GL_PROGRAM_OUTPUT,i,sizeof(name),NULL,name);
+		glGetProgramResourceiv(program,GL_PROGRAM_OUTPUT,i,2,props,2,NULL,params);
+		type_name = name;
+		std::cout << "(" << type_name << ")" << "location:" << params[1] << std::endl;
+	}
+
+	glGetProgramInterfaceiv(program,GL_UNIFORM_BLOCK,GL_ACTIVE_RESOURCES,&outputs);
+	if(outputs > 0)
+		std::cout <<"***Uniform Block:***" << std::endl;
+
+	for(int i = 0; i != outputs; ++i)
+	{
+		glGetProgramResourceName(program,GL_UNIFORM_BLOCK,i,sizeof(name),NULL,name);
+		glGetProgramResourceiv(program,GL_UNIFORM_BLOCK,i,2,props,2,NULL,params);
+		type_name = name;
+		std::cout << "(" << type_name << ")" << "uniform:" << params[1] << std::endl;
+	}
+
+	glGetProgramInterfaceiv(program, GL_UNIFORM,  GL_ACTIVE_RESOURCES, &outputs);
+	if (outputs > 0)
+		std::cout << "***Uniform***" << std::endl;
+	if (outputs > 100)
+		return ;
+	for (int i = 0; i != outputs; ++i)
+	{
+		glGetProgramResourceName(program, GL_UNIFORM, i, sizeof(name), NULL, name);
+		glGetProgramResourceiv( program, GL_UNIFORM, i, 2, props, 2, NULL, params);
+
+		type_name = name;
+		//std::cout << "Index " << i << std::endl;
+		std::cout  <<  "(" <<  type_name  << ")" << " locatoin: " << params[1] << std::endl;
+	}
+	std::cout << "--------------------------------------------------------------------------------" << std::endl;
+}
+
+//----------------------------------------------------------------------------
 #ifdef __cplusplus
 }
 #endif // __cplusplus

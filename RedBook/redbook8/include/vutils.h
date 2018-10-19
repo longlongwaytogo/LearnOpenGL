@@ -17,4 +17,6 @@ void vglAttachShaderSource(GLuint prog, GLenum type, const char * source)
 }
 
 
+
+
 #endif /* __VUTILS_H__ */
