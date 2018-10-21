@@ -15,16 +15,16 @@
 
 #include <vapp.h>
 #include <vutils.h>
-#include <vermilion.h>
 #include <vmath.h>
 #include <vbm.h>
 #include <Camera.h>
 #include <LoadShaders.h>
 #include <stdio.h>
 
+using namespace vmath;
 
 #define FRUSTUM_DEPTH       800.0f
-#define DEPTH_TEXTURE_SIZE  1024
+#define DEPTH_TEXTURE_SIZE  2048
 
 vmath::mat4 toVmathMat4(glm::mat4& refMat)
 {
@@ -80,10 +80,12 @@ BEGIN_APP_DECLARATION(ShadowMap)
 	GLuint m_vao;
 	GLuint m_vbo;
  
-
 	bool	 m_bLeftMouseDown;
 	int		 m_mouseX;
 	int		 m_mouseY;
+
+    int     m_currentWidth;
+    int     m_currentHeight;
 	Camera m_camera;
 
 END_APP_DECLARATION()
@@ -203,40 +205,8 @@ void ShadowMap::Finalize()
 	glDeleteFramebuffers(1,&m_fbo);
 }
 
-void ShadowMap::Reshape(int width, int height)
-{
-	glViewport(0, 0, width, height);
-	m_aspect = float(height) / float(width);
-}
 
-void ShadowMap::DrawScene(bool depthOnly)
-{
-	if(!depthOnly)
-	{
-		// set object material;
-		glUniform3fv(m_uniform_loc.mat_ambient,1,vmath::vec3(0.1f,0.0f,0.2f));
-		glUniform3fv(m_uniform_loc.mat_diffuse,1,vmath::vec3(0.3f,0.2f,0.8f));
-		glUniform3fv(m_uniform_loc.mat_specular,1,vmath::vec3(1.0f,1.0f,1.0f));
-		glUniform1f(m_uniform_loc.mat_specular_power,25.0f);
-	}
 
-	// draw object
-	m_object.Render();
-
-	// set ground material
-	if(!depthOnly)
-	{
-		glUniform3fv(m_uniform_loc.mat_ambient,1,vmath::vec3(0.1f, 0.1f, 0.1f));
-		glUniform3fv(m_uniform_loc.mat_diffuse,1,vmath::vec3(0.1f, 0.5f, 0.1f));
-		glUniform3fv(m_uniform_loc.mat_specular,1,vmath::vec3(0.1f, 0.1f, 0.1f));
-		glUniform1f(m_uniform_loc.mat_specular_power,3.0f);
-	}
-
-	// draw the ground
-	glBindVertexArray(m_vao);
-	glDrawArrays(GL_TRIANGLE_FAN,0,4);
-	glBindVertexArray(0);
-}
 void ShadowMap::Display(bool auto_redraw)
 {
 	static const unsigned int start_time = GetTickCount();
@@ -249,14 +219,11 @@ void ShadowMap::Display(bool auto_redraw)
 	vmath::vec3 light_position = vmath::vec3(sinf(t * 6.0f * 3.141592f) * 300.0f, 200.0f, cosf(t * 4.0f * 3.141592f) * 100.0f + 250.0f);
 
 	glm::mat4 view_matrix = m_camera.GetViewMatrix();
- 
-	glClearColor(0.0f, 0.0f ,0.0f,1.0f);
-	glClearDepth(1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+ 	glEnable(GL_CULL_FACE);
 	
 	glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
-	glEnable(GL_CULL_FACE);
+
 
 	/*vmath::mat4 model_mat = vmath::translate(vmath::vec3(0,0,-140));
 	vmath::mat4 view_mat = toVmathMat4(view_matrix);
@@ -265,6 +232,8 @@ void ShadowMap::Display(bool auto_redraw)
 	vmath::mat4 model_mat = vmath::rotate(t* 720.0f,Y);
 	vmath::mat4 view_mat = vmath::translate(0.0f,0.0f,-300.0f);
 	vmath::mat4 projection_mat = vmath::frustum(-1.0f, 1.0f, -m_aspect, m_aspect, 1.0f, FRUSTUM_DEPTH);
+
+    view_mat = toVmathMat4(view_matrix);
 
 	const vmath::mat4 scale_bias_matrix = vmath::mat4(vmath::vec4(0.5f,0.0f,0.0f,0.0f),
 				vmath::vec4(0.0f, 0.5f, 0.0f, 0.0f),
@@ -288,28 +257,31 @@ void ShadowMap::Display(bool auto_redraw)
 	glClearDepth(1.0f);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
+    
+
 	// enable polygon offset to resolve depth-fighting isuse
 	glEnable(GL_POLYGON_OFFSET_FILL);
-	glPolygonOffset(2.0f,2.0f);
+	glPolygonOffset(2.0f,4.0f);
 
 	// 绘制阴影
-	//DrawScene(true);
+	DrawScene(true);
 
 	glDisable(GL_POLYGON_OFFSET_FILL);
 
-	// 设置真正场景绘制的矩阵
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glViewport(0, 0, m_currentWidth, m_currentHeight);
 	glUseProgram(m_program);
-	 model_mat = vmath::translate(vmath::vec3(0,0,-140));
-	view_mat = toVmathMat4(view_matrix);
-	projection_mat = vmath::perspective(45.0f,1.0f/m_aspect,0.30f,1000.0f);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	
 
 	glUniformMatrix4fv(m_uniform_loc.model,1,GL_FALSE,model_mat);
 	glUniformMatrix4fv(m_uniform_loc.view,1,GL_FALSE,view_mat);
 	glUniformMatrix4fv(m_uniform_loc.proj,1,GL_FALSE,projection_mat);
-
+    glUniformMatrix4fv(m_uniform_loc.shadow_matrix,1,GL_FALSE,scale_bias_matrix * light_projection_mat * light_view_mat);
+    glUniform3fv(m_uniform_loc.lightPos, 1, light_position);
 	glBindTexture(GL_TEXTURE_2D,m_depth_texture);
 	glGenerateMipmap(GL_TEXTURE_2D);
-    glClear(GL_DEPTH_BUFFER_BIT);
+
 	
 	 DrawScene(false);
 
@@ -317,6 +289,45 @@ void ShadowMap::Display(bool auto_redraw)
 }
 
 	
+void ShadowMap::DrawScene(bool depthOnly)
+{
+    if(!depthOnly)
+    {
+        // set object material;
+        glUniform3fv(m_uniform_loc.mat_ambient,1,vmath::vec3(0.1f,0.0f,0.2f));
+        glUniform3fv(m_uniform_loc.mat_diffuse,1,vmath::vec3(0.3f,0.2f,0.8f));
+        glUniform3fv(m_uniform_loc.mat_specular,1,vmath::vec3(1.0f,1.0f,1.0f));
+        glUniform1f(m_uniform_loc.mat_specular_power,25.0f);
+    }
+
+    // draw object
+    m_object.Render();
+
+    // set ground material
+    if(!depthOnly)
+    {
+        glUniform3fv(m_uniform_loc.mat_ambient,1,vmath::vec3(0.1f, 0.1f, 0.1f));
+        glUniform3fv(m_uniform_loc.mat_diffuse,1,vmath::vec3(0.1f, 0.5f, 0.1f));
+        glUniform3fv(m_uniform_loc.mat_specular,1,vmath::vec3(0.1f, 0.1f, 0.1f));
+        glUniform1f(m_uniform_loc.mat_specular_power,3.0f);
+    }
+
+    // draw the ground
+    glBindVertexArray(m_vao);
+    glDrawArrays(GL_TRIANGLE_FAN,0,4);
+    glBindVertexArray(0);
+}
+
+void ShadowMap::Reshape(int width, int height)
+{
+	glViewport(0, 0, width, height);
+    
+    m_currentWidth = width;
+    m_currentHeight = height;
+	m_aspect = float(height) / float(width);
+}
+
+
   void ShadowMap::Keyboard(unsigned char key, int x, int y )
 	{
 		Camera_Movement direction = FORWARD ;

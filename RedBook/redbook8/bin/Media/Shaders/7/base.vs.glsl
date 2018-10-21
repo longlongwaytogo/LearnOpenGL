@@ -30,6 +30,6 @@ void main()
 	info.normal = mat3(view_matrix * model_matrix) * normal;
 	info.shadow_coord = shadow_matrix * world_pos; 
 	
-	gl_Position = projection_matrix * model_matrix *view_matrix * position;
+	gl_Position = projection_matrix * clip_pos;
 	
 }

@@ -23,7 +23,7 @@ void main()
 {
 	//vec3 rgb =  vec3(0.3,0.3,0.3) + vec3(0.0f,1.0f,0.5f) * info.normal;
 	//fragColor = vec4(rgb,1.0f);
-	vec3 N = info.normal;
+    vec3 N = info.normal;
     vec3 L = normalize(lightPos - info.world_coord);
     float LdotN = dot(N, L);
     vec3 R = reflect(-L, N);
