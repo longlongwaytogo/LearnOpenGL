@@ -136,6 +136,12 @@ LoadShaders( ShaderInfo* shaders )
 				type = "vertex_shader";
 			else if( entry->type == GL_FRAGMENT_SHADER)
 				type = "fragment_shader";
+			else if( entry->type == GL_GEOMETRY_SHADER)
+				type = "geometry_shader";
+			else if( entry->type == GL_TESS_CONTROL_SHADER)
+				type = "tess_control shader";
+			else if( entry->type == GL_TESS_EVALUATION_SHADER)
+				type = "tess_evaluation shader";
 			else
 				type = "unknown type";
             std::cerr <<"type:" << type << ":Shader compilation failed: " << log << std::endl;

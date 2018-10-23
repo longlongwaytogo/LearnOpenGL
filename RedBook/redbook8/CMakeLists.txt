@@ -136,4 +136,9 @@ SET_PROPERTY(TARGET simple PROPERTY FOLDER  "ch09")
 
 
 
- 
+#ch10
+add_executable(ch10-1-ViewportArray src/10/ViewportArray.cpp)
+SET_PROPERTY(TARGET ch10-1-ViewportArray PROPERTY FOLDER "ch10")
+
+add_executable(ch10-2-Draw_xfb src/10/Draw_xfb.cpp)
+SET_PROPERTY(TARGET ch10-2-Draw_xfb PROPERTY FOLDER "ch10")
