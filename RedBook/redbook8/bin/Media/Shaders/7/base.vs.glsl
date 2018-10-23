@@ -2,13 +2,14 @@
 
 #version 430 core
 
-layout(location = 0) in vec4 position;
-layout(location = 1) in vec3 normal;
 
 uniform mat4 model_matrix;
 uniform mat4 view_matrix;
 uniform mat4 projection_matrix;
 uniform mat4 shadow_matrix;
+
+layout(location = 0) in vec4 position;
+layout(location = 1) in vec3 normal;
 
 out vs_fs_out
 {
@@ -27,9 +28,9 @@ void main()
 	
 	info.world_coord = world_pos.xyz;
 	info.eye_coord = eye_pos.xyz;
-	info.normal = mat3(view_matrix * model_matrix) * normal;
 	info.shadow_coord = shadow_matrix * world_pos; 
+	info.normal = mat3(view_matrix * model_matrix) * normal;
 	
-	gl_Position = projection_matrix * clip_pos;
+	gl_Position =  clip_pos;
 	
 }

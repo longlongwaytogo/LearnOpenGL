@@ -126,10 +126,6 @@ add_executable(ch07-3-ShadowMap src/7/Shadowmap.cpp)
 target_link_libraries(ch07-3-ShadowMap vermilion)
 SET_PROPERTY(TARGET ch07-3-ShadowMap PROPERTY FOLDER "ch07")
 
-add_executable(ch07-3-ShadowMap-2 src/7/ch04_shadowmap.cpp)
-target_link_libraries(ch07-3-ShadowMap-2 vermilion)
-SET_PROPERTY(TARGET ch07-3-ShadowMap-2 PROPERTY FOLDER "ch07")
-
 
 #ch09
 add_executable(teapot src/9/teapot.cpp)

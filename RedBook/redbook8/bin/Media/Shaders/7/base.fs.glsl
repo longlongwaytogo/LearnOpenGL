@@ -8,6 +8,8 @@ uniform vec3 mat_diffuse;
 uniform vec3 mat_specular;
 uniform float mat_specular_power;
 
+layout(location = 0) out vec4 fragColor;
+
 in vs_fs_out
 {
 	vec4 shadow_coord;
@@ -17,7 +19,7 @@ in vs_fs_out
 
 } info;
 
-layout(location = 0) out vec4 fragColor;
+
 
 void main()
 {

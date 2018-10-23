@@ -38,18 +38,7 @@ vmath::mat4 toVmathMat4(glm::mat4& refMat)
 }
 
 
-struct Base_uniform_loc
-	{
-		GLuint model;
-		GLuint view;
-		GLuint proj;
-		GLuint shadow_matrix;
-		GLuint lightPos;
-		GLuint mat_ambient;
-		GLuint mat_diffuse;
-		GLuint mat_specular;
-		GLuint mat_specular_power;
-	};
+
 
 
 BEGIN_APP_DECLARATION(ShadowMap)
@@ -73,7 +62,22 @@ BEGIN_APP_DECLARATION(ShadowMap)
 	GLuint m_depth_texture;
 	GLuint m_fbo;
 
+	struct Base_uniform_loc
+	{
+		GLuint model;
+		GLuint view;
+		GLuint proj;
+		GLuint shadow_matrix;
+		GLuint lightPos;
+		GLuint mat_ambient;
+		GLuint mat_diffuse;
+		GLuint mat_specular;
+		GLuint mat_specular_power;
+	};
+
     Base_uniform_loc m_uniform_loc;
+
+	
 	GLuint m_shadow_mvp_loc;
 	VBObject m_object;
 
@@ -173,7 +177,10 @@ void ShadowMap::Initialize(const char * title)
 	// init texture
 	glGenTextures(1,&m_depth_texture);
 	glBindTexture(GL_TEXTURE_2D,m_depth_texture);
-	glTexImage2D(GL_TEXTURE_2D,0,GL_DEPTH_COMPONENT32,DEPTH_TEXTURE_SIZE,DEPTH_TEXTURE_SIZE,0,GL_DEPTH_COMPONENT,GL_FLOAT,NULL);
+
+	//glTexImage2D(GL_TEXTURE_2D,0,GL_DEPTH_COMPONENT32,DEPTH_TEXTURE_SIZE,DEPTH_TEXTURE_SIZE,0,GL_DEPTH_COMPONENT24/*GL_DEPTH_COMPONENT*/,GL_FLOAT,NULL);
+	// https://www.khronos.org/opengl/wiki/GLAPI/glTexImage2D
+	glTexImage2D(GL_TEXTURE_2D,0,GL_DEPTH_COMPONENT32,DEPTH_TEXTURE_SIZE,DEPTH_TEXTURE_SIZE,0,GL_DEPTH_COMPONENT/*GL_DEPTH_COMPONENT*/,GL_FLOAT,NULL);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_COMPARE_MODE,GL_COMPARE_REF_TO_TEXTURE);
@@ -186,6 +193,12 @@ void ShadowMap::Initialize(const char * title)
 	glGenFramebuffers(1,&m_fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER,m_fbo);
 	glFramebufferTexture(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,m_depth_texture,0);
+	// 此处红宝书源码给的是GL_DEPTH_STENCIL_ATTACHMENT，显示效果错误，无法显示阴影，改为GL_DEPTH_ATTACHMENT正常
+	// GL_DEPTH_STENCIL_ATTACHMENT:对于压缩的深度模版格式，internalformat必须设置为GL_DETPH_STENCIL，这样就允许渲染缓存绑定到深度缓存或者模板缓存，甚至是合并的深度模版附件点
+	//glFramebufferTexture(GL_FRAMEBUFFER,GL_DEPTH_STENCIL_ATTACHMENT,m_depth_texture,0);
+	// glFramebufferTexture(GLenum, GLenum, GLuint, GLint);
+	// glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
+	// GL_DEPTH_STENCIL 使用，参考：https://open.gl/framebuffers
 
 	// we don't need color buffer;
 	glDrawBuffer(GL_NONE);
@@ -209,6 +222,49 @@ void ShadowMap::Finalize()
 
 void ShadowMap::Display(bool auto_redraw)
 {
+//	vmath::mat4 lookatMat = vmath::lookat(vec3(0,0,0),vec3(0,0,-100),vec3(0,1,0));
+//
+//	float mat[16];
+//	glGetFloatv(GL_MODELVIEW_MATRIX, mat);
+//	
+//	printf("\n");
+//	for(int i=0;i<16;++i)
+//	{
+//		if(i%4 == 0)
+//			printf("\n");
+//		printf("%f ",mat[i]);
+//			
+//	}
+//	printf("\n");
+//
+//	// set modelview
+//	glMatrixMode(GL_MODELVIEW);
+//	gluLookAt(0,0,0,0,0,-1,0,0,1);
+//
+//	printf("set after look at\n");
+//	for(int i=0;i<16;++i)
+//	{
+//		if(i%4 == 0)
+//			printf("\n");
+//		printf("%f ",mat[i]);
+//		
+//	}
+//	printf("\n");
+//
+////-------------------------------------------------------------
+//	gluLookAt(0,0,-1,0,-1,-1,0,0,1);
+//
+//	printf("set after look at two:\n");
+//	for(int i=0;i<16;++i)
+//	{
+//		if(i%4 == 0)
+//			printf("\n");
+//		printf("%f ",mat[i]);
+//		
+//	}
+//	printf("\n");
+
+
 	static const unsigned int start_time = GetTickCount();
 	float t = float(GetTickCount() & 0xFFFF) / float(0xFFFF);
 
@@ -233,7 +289,7 @@ void ShadowMap::Display(bool auto_redraw)
 	vmath::mat4 view_mat = vmath::translate(0.0f,0.0f,-300.0f);
 	vmath::mat4 projection_mat = vmath::frustum(-1.0f, 1.0f, -m_aspect, m_aspect, 1.0f, FRUSTUM_DEPTH);
 
-    view_mat = toVmathMat4(view_matrix);
+   // view_mat = toVmathMat4(view_matrix);
 
 	const vmath::mat4 scale_bias_matrix = vmath::mat4(vmath::vec4(0.5f,0.0f,0.0f,0.0f),
 				vmath::vec4(0.0f, 0.5f, 0.0f, 0.0f),
@@ -268,8 +324,8 @@ void ShadowMap::Display(bool auto_redraw)
 
 	glDisable(GL_POLYGON_OFFSET_FILL);
 
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  glViewport(0, 0, m_currentWidth, m_currentHeight);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, m_currentWidth, m_currentHeight);
 	glUseProgram(m_program);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	
