@@ -142,3 +142,9 @@ SET_PROPERTY(TARGET ch10-1-ViewportArray PROPERTY FOLDER "ch10")
 
 add_executable(ch10-2-Draw_xfb src/10/Draw_xfb.cpp)
 SET_PROPERTY(TARGET ch10-2-Draw_xfb PROPERTY FOLDER "ch10")
+
+
+#ch11
+add_executable(ch11-1-doubleWrite src/11/DoubleWrite.cpp src/11/vbm.cpp src/11/vbm.h)
+target_link_libraries(ch07-3-ShadowMap vermilion)
+SET_PROPERTY(TARGET ch11-1-doubleWrite PROPERTY FOLDER "ch11")
