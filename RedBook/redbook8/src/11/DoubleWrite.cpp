@@ -26,8 +26,9 @@ private:
 	GLuint m_image_palette_buffer; // 纹理缓冲区对象
 	GLuint m_image_palette_texture; //纹理 
 	
+	// 输出纹理，渲染第一阶段，在shader中写入数据，渲染第二阶段，在shader中读取数据
+	GLuint m_output_texture;   
 	// Output iamge and PBO for clear it 
-	GLuint m_output_texture;
 	GLuint m_output_texture_clear_buffer;
 
 	GLuint m_render_program; // 渲染模型着色器
@@ -52,7 +53,6 @@ private:
 	
 END_APP_DECLARATION()
 
-
 DEFINE_APP(DoubleWrite, "DoubleWrite")
 
 void DoubleWrite::InitShaders()
@@ -73,7 +73,6 @@ void DoubleWrite::InitShaders()
 		{GL_NONE,NULL}
 	};
 	m_resolve_program = LoadShaders(blit_shaders);
-	
 }
 
 void DoubleWrite::InitBuffers()
@@ -141,7 +140,6 @@ void DoubleWrite::InitBuffers()
 	glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,0,NULL);
 	glEnableVertexAttribArray(0);
 	
-
 	glClearDepth(1.0f);
 	
 	glBindVertexArray(0);
@@ -175,7 +173,7 @@ void DoubleWrite::Display(bool auto_redraw)
 	//绑定图像数据到0上
 	glBindImageTexture(0,m_image_palette_texture,0,GL_FALSE,0,GL_READ_ONLY,GL_RGBA32F);
 	
-	// clear output image
+	// clear output image  使用 m_output_texture_clear_buffer中的数据，重新覆盖m_output_texture中的数据，即清空原有数据，准备重新写入。
 	glBindBuffer(GL_PIXEL_UNPACK_BUFFER,m_output_texture_clear_buffer);
 	glBindTexture(GL_TEXTURE_2D,m_output_texture);
 	glTexSubImage2D(GL_TEXTURE_2D,0,0,0,m_current_width,m_current_height,GL_RGBA,GL_FLOAT,NULL);
@@ -219,7 +217,6 @@ void DoubleWrite::Display(bool auto_redraw)
 	base::Display(auto_redraw);
 }
 
-
 void DoubleWrite::Finalize()
 {
 	glUseProgram(0);
@@ -230,11 +227,9 @@ void DoubleWrite::Finalize()
 void DoubleWrite::Reshape(int width, int height)
 {
 	m_aspect  = GLfloat(width)/height;
-	
 	glViewport(0,0,width,height);
-	
+
 	m_current_width = width;
 	m_current_height = height;
-
 }
 
