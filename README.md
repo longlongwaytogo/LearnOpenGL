@@ -52,7 +52,9 @@ Opengl red book
 
 
 
-
+## GLSL 细节
+[http://www.zwqxin.com/archives/shaderglsl/communication-between-opengl-glsl-2.html]()  
+[http://www.zwqxin.com/archives/shaderglsl/communication-between-opengl-glsl.html]()  
 其他图形学相关书籍：
 
 1.  Ray Tracking in on week:  

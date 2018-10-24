@@ -53,7 +53,7 @@ void Draw_xfb::Initialize(const char* title)
 	
 	m_sort_program = LoadShaders(sort_shaders);
 	
-	glUseProgram(m_sort_program);
+	//glUseProgram(m_sort_program);
 	ShowShaderInfo(m_sort_program);
 	m_model_view_matrix_loc = glGetUniformLocation(m_sort_program,"model_matrix");
 	m_projection_matrix_loc = glGetUniformLocation(m_sort_program,"projection_matrix");
