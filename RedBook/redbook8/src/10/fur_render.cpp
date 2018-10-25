@@ -112,7 +112,21 @@ void FurApplication::Display(bool auto_redraw)
     glUseProgram(m_base_prog);
 	glUniformMatrix4fv(m_base_model_matrix_pos,1,GL_FALSE,m[0]);
 	glUniformMatrix4fv(m_base_projection_matrix_pos,1,GL_FALSE,p[0]);
+
+
+	glDisable(GL_BLEND);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+
+	m_object.Render();
 	
+	glUseProgram(m_fur_prog);
+
+    glUniformMatrix4fv(m_fur_model_matrix_pos, 1, GL_FALSE, m[0]);
+    glUniformMatrix4fv(m_fur_projection_matrix_pos, 1, GL_FALSE, p);
+
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	
