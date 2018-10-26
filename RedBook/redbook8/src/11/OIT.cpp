@@ -55,7 +55,7 @@ DEFINE_APP(OIT, "OIT")
 
 void OIT::InitShaders()
 {
-#if 1
+
 	ShaderInfo render_shaders[] = {
 		{GL_VERTEX_SHADER,"Media/Shaders/11/OIT.vs.glsl"},
 		{GL_FRAGMENT_SHADER,"Media/Shaders/11/OIT.fs.glsl"},
@@ -69,28 +69,9 @@ void OIT::InitShaders()
 	ShaderInfo blit_shaders[] = {
 		{GL_VERTEX_SHADER,"Media/shaders/11/OIT_blit.vs.glsl"},
 		{GL_FRAGMENT_SHADER,"Media/shaders/11/OIT_blit.fs.glsl"},
-		//{GL_FRAGMENT_SHADER,"Media/shaders/11/resolve_lists.fs.glsl"},
 		{GL_NONE,NULL}
 	};
-	m_resolve_program = LoadShaders(blit_shaders);
-#else
-	ShaderInfo render_shaders[] = {
-		{GL_VERTEX_SHADER,"Media/Shaders/11/build_lists.vs.glsl"},
-		{GL_FRAGMENT_SHADER,"Media/Shaders/11/build_lists.fs.glsl"},
-		{GL_NONE,NULL} 
-	};
-	m_list_build_program = LoadShaders(render_shaders);
-	m_model_matrix_loc = glGetUniformLocation(m_list_build_program,"model_matrix");
-	m_view_matrix_loc = glGetUniformLocation(m_list_build_program,"view_matrix");
-	m_projection_matrix_loc = glGetUniformLocation(m_list_build_program,"projection_matrix");
-
-	ShaderInfo blit_shaders[] = {
-		{GL_VERTEX_SHADER,"Media/shaders/11/resolve_lists.vs.glsl"},
-		{GL_FRAGMENT_SHADER,"Media/shaders/11/resolve_lists.fs.glsl"},
-		{GL_NONE,NULL}
-	};
-	m_resolve_program = LoadShaders(blit_shaders);
-#endif 
+	m_resolve_program = LoadShaders(blit_shaders); 
 }
 
 void OIT::InitBuffers()
