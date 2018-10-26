@@ -162,3 +162,7 @@ bin/Media/Shaders/11/OIT.vs.glsl)
 
 add_executable(ch11-3-OrderIndependentTransparency  src/11/OIT.cpp src/11/vbm.cpp src/11/vbm.h ${SHADER_FILE})
 SET_PROPERTY(TARGET ch11-3-OrderIndependentTransparency PROPERTY FOLDER "ch11")
+
+SET(SHADER_FILE "" )
+add_executable(ch12-1-simpleComputeShader  src/12/simpleComputeShader.cpp ${SHADER_FILE})
+SET_PROPERTY(TARGET ch12-1-simpleComputeShader PROPERTY FOLDER "ch12")

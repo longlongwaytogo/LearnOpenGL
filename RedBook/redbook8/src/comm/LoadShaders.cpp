@@ -59,8 +59,7 @@ Utils* Utils::instance()
 
 //----------------------------------------------------------------------------
 
-static const GLchar*
-ReadShader( const char* filename )
+const GLchar* ReadShader( const char* filename )
 {
 #ifdef WIN32
 	FILE* infile;
