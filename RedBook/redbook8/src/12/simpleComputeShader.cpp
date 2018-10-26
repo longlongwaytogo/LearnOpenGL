@@ -38,6 +38,9 @@ void SimpleComputeShaderExample::Initialize(const char* title)
 
 	glGenTextures(1,&m_output_image);
 	glBindTexture(GL_TEXTURE_2D,m_output_image);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_BORDER);
+
+	//glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_BORDER);
 	glTexStorage2D(GL_TEXTURE_2D,1,GL_RGBA32F,256,256);
 	
 #if 1

@@ -141,6 +141,8 @@ LoadShaders( ShaderInfo* shaders )
 				type = "tess_control shader";
 			else if( entry->type == GL_TESS_EVALUATION_SHADER)
 				type = "tess_evaluation shader";
+			else if( entry->type == GL_COMPUTE_SHADER)
+				type = "compute shader";
 			else
 				type = "unknown type";
             std::cerr <<"type:" << type << ":Shader compilation failed: " << log << std::endl;
