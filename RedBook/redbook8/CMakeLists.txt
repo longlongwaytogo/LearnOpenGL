@@ -113,41 +113,52 @@ add_library(vermilion   src/vermilion/loadtexture.cpp src/vermilion/vdds.cpp)
 # target_link_libraries(ch06-10-PointSprite-2 vermilion)
 # SET_PROPERTY(TARGET ch06-10-PointSprite-2  PROPERTY FOLDER "ch06")
 
-# ch07 light
-add_executable(ch07-1-LightShader src/7/LightShader.cpp)
-target_link_libraries(ch07-1-LightShader vermilion)
-SET_PROPERTY(TARGET ch07-1-LightShader PROPERTY FOLDER "ch07")
+# # ch07 light
+# add_executable(ch07-1-LightShader src/7/LightShader.cpp)
+# target_link_libraries(ch07-1-LightShader vermilion)
+# SET_PROPERTY(TARGET ch07-1-LightShader PROPERTY FOLDER "ch07")
 
-add_executable(ch07-2-LightShader-phong src/7/LightShader_phong.cpp)
-target_link_libraries(ch07-2-LightShader-phong vermilion)
-SET_PROPERTY(TARGET ch07-2-LightShader-phong PROPERTY FOLDER "ch07")
+# add_executable(ch07-2-LightShader-phong src/7/LightShader_phong.cpp)
+# target_link_libraries(ch07-2-LightShader-phong vermilion)
+# SET_PROPERTY(TARGET ch07-2-LightShader-phong PROPERTY FOLDER "ch07")
 
-add_executable(ch07-3-ShadowMap src/7/Shadowmap.cpp)
-target_link_libraries(ch07-3-ShadowMap vermilion)
-SET_PROPERTY(TARGET ch07-3-ShadowMap PROPERTY FOLDER "ch07")
-
-
-#ch09
-add_executable(teapot src/9/teapot.cpp)
-SET_PROPERTY(TARGET teapot PROPERTY FOLDER "ch09")
-
-add_executable(simple src/9/simple.cpp)
-SET_PROPERTY(TARGET simple PROPERTY FOLDER  "ch09")
+# add_executable(ch07-3-ShadowMap src/7/Shadowmap.cpp)
+# target_link_libraries(ch07-3-ShadowMap vermilion)
+# SET_PROPERTY(TARGET ch07-3-ShadowMap PROPERTY FOLDER "ch07")
 
 
+# #ch09
+# add_executable(teapot src/9/teapot.cpp)
+# SET_PROPERTY(TARGET teapot PROPERTY FOLDER "ch09")
 
-#ch10
-add_executable(ch10-1-ViewportArray src/10/ViewportArray.cpp)
-SET_PROPERTY(TARGET ch10-1-ViewportArray PROPERTY FOLDER "ch10")
-
-add_executable(ch10-2-Draw_xfb src/10/Draw_xfb.cpp)
-SET_PROPERTY(TARGET ch10-2-Draw_xfb PROPERTY FOLDER "ch10")
+# add_executable(simple src/9/simple.cpp)
+# SET_PROPERTY(TARGET simple PROPERTY FOLDER  "ch09")
 
 
-add_executable(ch10-3-Fur_Render src/10/fur_render.cpp)
-SET_PROPERTY(TARGET ch10-3-Fur_Render PROPERTY FOLDER "ch10")
+
+# #ch10
+# add_executable(ch10-1-ViewportArray src/10/ViewportArray.cpp)
+# SET_PROPERTY(TARGET ch10-1-ViewportArray PROPERTY FOLDER "ch10")
+
+# add_executable(ch10-2-Draw_xfb src/10/Draw_xfb.cpp)
+# SET_PROPERTY(TARGET ch10-2-Draw_xfb PROPERTY FOLDER "ch10")
+
+
+# add_executable(ch10-3-Fur_Render src/10/fur_render.cpp)
+# SET_PROPERTY(TARGET ch10-3-Fur_Render PROPERTY FOLDER "ch10")
 
 #ch11
 add_executable(ch11-1-doubleWrite src/11/DoubleWrite.cpp src/11/vbm.cpp src/11/vbm.h)
-target_link_libraries(ch07-3-ShadowMap vermilion)
+#target_link_libraries(ch11-1-doubleWrite vermilion)
 SET_PROPERTY(TARGET ch11-1-doubleWrite PROPERTY FOLDER "ch11")
+
+add_executable(ch11-2-overdrawcount src/11/overdrawcount.cpp src/11/vbm.cpp src/11/vbm.h)
+SET_PROPERTY(TARGET ch11-2-overdrawcount PROPERTY FOLDER "ch11")
+
+SET(SHADER_FILE  bin/Media/Shaders/11/OIT_blit.fs.glsl
+bin/Media/Shaders/11/OIT_blit.vs.glsl
+bin/Media/Shaders/11/OIT.fs.glsl
+bin/Media/Shaders/11/OIT.vs.glsl)
+
+add_executable(ch11-3-OrderIndependentTransparency  src/11/OIT.cpp src/11/vbm.cpp src/11/vbm.h ${SHADER_FILE})
+SET_PROPERTY(TARGET ch11-3-OrderIndependentTransparency PROPERTY FOLDER "ch11")

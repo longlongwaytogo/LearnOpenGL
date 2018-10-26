@@ -26,6 +26,7 @@ Opengl red book
 [https://my.oschina.net/sweetdark]()
 [https://github.com/sweetdark/openglex]()
 
+## [Model OpenGL](https://alfonse.bitbucket.io/oldtut/)
 
 ##zwqxin 博客：
 [http://www.zwqxin.com/archives/shaderglsl/review-normal-map-bump-map.html]()
