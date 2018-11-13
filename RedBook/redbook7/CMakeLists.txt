@@ -32,6 +32,13 @@ SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 add_custom_target(cmd ALL DEPENDS ${TEST_FILE})
 # project 
 # ╣зр╩уб
-add_executable(hello src/hello.c)
- 
+add_executable(ch01-hello src/hello.c)
+
+# ch11
+add_executable(ch11-tess src/tess.c)
+add_executable(ch11-tesswind src/tesswind.c) 
+
+#ch12
+add_executable(ch12-bezcurve src/bezcurve.c)
+add_executable(ch12-bezsurf src/bezsurf.c)
 
