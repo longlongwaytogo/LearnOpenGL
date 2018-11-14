@@ -41,4 +41,8 @@ add_executable(ch11-tesswind src/tesswind.c)
 #ch12
 add_executable(ch12-bezcurve src/bezcurve.c)
 add_executable(ch12-bezsurf src/bezsurf.c)
+add_executable(ch12-bezmesh src/bezmesh.c)
+add_executable(ch12-texturesurf src/texturesurf.c)
+add_executable(ch12-surfac src/surface.c)
+add_executable(ch12-trim src/trim.c)
 

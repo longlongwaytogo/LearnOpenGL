@@ -7,7 +7,8 @@ Opengl red book
 
 ## RedBook
 
-1. Code samples for the OpenGL v1.1 Programming Guide [Redbook](https://www.opengl.org/archives/resources/code/samples/redbook/)
+1. Code samples for the OpenGL v1.1 Programming Guide [Redbook](https://www.opengl.org/archives/resources/code/  samples/redbook/)
+2. [http://glprogramming.com/red]()
 - https://github.com/openglredbook/examples
 - 第八版的图书源码 源代码: [http://opengl-redbook.com/Code/oglpg-8th-edition.zip]()
 - 第九版的图书源码:[http://opengl-redbook.com/OGLPG-9th-Edition.zip](),[github](https://github.com/openglredbook/examples])  [https://download.csdn.net/download/ygahbin1981/10252335]()
@@ -56,6 +57,7 @@ Opengl red book
 ## GLSL 细节
 [http://www.zwqxin.com/archives/shaderglsl/communication-between-opengl-glsl-2.html]()  
 [http://www.zwqxin.com/archives/shaderglsl/communication-between-opengl-glsl.html]()  
+[GLSL 内建函数](https://www.cnblogs.com/kex1n/p/3941765.html)
 其他图形学相关书籍：
 
 1.  Ray Tracking in on week:  
