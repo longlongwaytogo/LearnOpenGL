@@ -127,12 +127,12 @@ add_library(vermilion   src/vermilion/loadtexture.cpp src/vermilion/vdds.cpp)
 # SET_PROPERTY(TARGET ch07-3-ShadowMap PROPERTY FOLDER "ch07")
 
 
-# #ch09
-# add_executable(teapot src/9/teapot.cpp)
-# SET_PROPERTY(TARGET teapot PROPERTY FOLDER "ch09")
+ #ch09
+ add_executable(teapot src/9/teapot.cpp)
+ SET_PROPERTY(TARGET teapot PROPERTY FOLDER "ch09")
 
-# add_executable(simple src/9/simple.cpp)
-# SET_PROPERTY(TARGET simple PROPERTY FOLDER  "ch09")
+ add_executable(simple src/9/simple.cpp)
+ SET_PROPERTY(TARGET simple PROPERTY FOLDER  "ch09")
 
 
 

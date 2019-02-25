@@ -3,6 +3,8 @@
 #include <vmath.h>
 #include <Shapes/Teapot.h>
 #include <mat.h>
+#include <iostream>
+
 
 using namespace std;
 
@@ -14,8 +16,24 @@ GLuint Outer_loc;  // Outer tessellation parameter
 GLfloat Inner = 1.0f;
 GLfloat Outer = 1.0f;
 
+
+void Info()
+{
+	std::cout<< "cmd:" << std::endl;
+	std::cout << "q: quit"<< std::endl;
+	std::cout << "i: inner--" << std::endl;
+	std::cout << "I: inner++" << std::endl;
+	std::cout << "o: outer--" << std::endl;
+	std::cout << "O: outer++" << std::endl;
+	std::cout << "r/R: 复位" << std::endl;
+	std::cout << " m/M: 填充模式/网格模式" << std::endl;
+}
 void init()
 {
+	Info();
+
+	glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+
 	GLuint vao;
 	glGenVertexArrays(1,&vao);
 	glBindVertexArray(vao);
@@ -136,7 +154,7 @@ void keyboard(unsigned char key,int x, int y)
 		case 'm':
 		case 'M':
 		{
-			static GLenum mode = GL_FILL;
+			static GLenum mode = GL_LINE;
 			mode = (mode == GL_FILL? GL_LINE  : GL_FILL);
 			glPolygonMode(GL_FRONT_AND_BACK,mode);
 			break;
