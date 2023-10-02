@@ -181,3 +181,15 @@ add_executable(ch12-2-particlesimulator  src/12/particlesimulator.cpp   ${SHADER
 SET_PROPERTY(TARGET ch12-2-particlesimulator PROPERTY FOLDER "ch12")
 
 MESSAGE( status "coutput:${SHADER_FILE}")
+
+SET(SHADER_FILE "")
+add_executable(test-pick  src/tests/pick/main.cpp ${SHADER_FILE})
+SET_PROPERTY(TARGET test-pick PROPERTY FOLDER "tests")
+
+SET(SHADER_FILE "")
+add_executable(test-pick2  src/tests/pick2/main.cpp ${SHADER_FILE})
+SET_PROPERTY(TARGET test-pick2 PROPERTY FOLDER "tests")
+
+
+# add test
+
